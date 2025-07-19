@@ -3,6 +3,3 @@ collections:
   - name: community.general
     version: 11.1.0
     source: https://galaxy.ansible.com
-  - name: kewlfft.aur
-    version: 0.11.1
-    source: https://galaxy.ansible.com
