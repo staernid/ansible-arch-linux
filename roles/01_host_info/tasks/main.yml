@@ -8,3 +8,6 @@
 - name: Set flag for EndeavourOS
   ansible.builtin.set_fact:
     is_endeavouros: "{{ ansible_facts['lsb']['id'] == 'EndeavourOS' }}"
+
+- name: Get details about installed packages
+  ansible.builtin.package_facts:

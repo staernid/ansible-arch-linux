@@ -1,14 +1,8 @@
 ---
-- name: check if {{ aur_helper }} is installed
-  community.general.pacman:
-    name: "{{ aur_helper }}"
-    state: present
-  check_mode: true
-  ignore_errors: true
-  register: aur_helper_installed
-
 - name: Install AUR helper (yay)
-  when: not aur_helper_installed
+  when: >
+    ('yay' not in ansible_facts.packages) and
+    ('yay-bin' not in ansible_facts.packages)
   tags: yay
   block:
   - name: Install dependencies
@@ -20,20 +14,26 @@
       - base-devel
       - git
 
-  - name: clone yay from github
-    become: true
-    git:
+  - name: Clone AUR helper (yay) from github
+    become: false
+    ansible.builtin.git:
       repo: https://aur.archlinux.org/yay.git
       dest: /tmp/yay
       version: master
       update: true
+      depth: 1
 
-  - name: makepkg --noconfirm -si
-    command: makepkg --noconfirm -si
-    become: true
+  - name: Build AUR helper (yay)
+    ansible.builtin.command: makepkg --noconfirm -sf
+    become: false
     args:
       chdir: /tmp/yay
-      creates: /usr/bin/yay
+      #creates: /usr/bin/yay
+
+  - name: Install the built package
+    ansible.builtin.shell: |
+      pacman -U --noconfirm $(ls /tmp/yay/yay-*.pkg.tar.zst | grep -v -- -debug)
+    become: true
 
 - name: Install AUR packages
   community.general.pacman:
