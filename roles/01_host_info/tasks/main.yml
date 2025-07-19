@@ -4,3 +4,7 @@
     that: ansible_distribution == "Archlinux"
     fail_msg: "Distribution '{{ ansible_distribution }}' is not supported."
     success_msg: "I run Arch, btw"
+
+- name: Set flag for EndeavourOS
+  ansible.builtin.set_fact:
+    is_endeavouros: "{{ ansible_facts['lsb']['id'] == 'EndeavourOS' }}"

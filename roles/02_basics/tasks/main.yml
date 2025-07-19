@@ -40,20 +40,21 @@
     mode: 0644
   become: true
 
-- name: Update mirrorlist
+- name: Update pacman configuration file
   ansible.builtin.template:
-    src: mirrorlist
-    dest: /etc/pacman.d/mirrorlist
+    src: pacman.conf.j2
+    dest: /etc/pacman.conf
     backup: no
     owner: root
     group: root
     mode: 0644
   become: true
 
-- name: Update pacman configuration file
+
+- name: Add cache mirrolist configuration file
   ansible.builtin.template:
-    src: pacman.conf.j2
-    dest: /etc/pacman.conf
+    src: cachelist.conf.j2
+    dest: /etc/pacman.d/cachelist.conf
     backup: no
     owner: root
     group: root

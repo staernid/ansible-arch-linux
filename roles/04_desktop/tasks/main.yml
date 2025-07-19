@@ -1,4 +1,11 @@
 ---
+- name: Install Xorg
+  community.general.pacman:
+    name:
+      - xorg-xwayland
+    state: present
+  become: true
+
 - name: Install desktop environment
   when: desktop == "kde"
   block:

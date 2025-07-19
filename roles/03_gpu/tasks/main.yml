@@ -1,16 +1,9 @@
 ---
-- name: Install Xorg
-  community.general.pacman:
-    name:
-      - xorg-xwayland
-    state: present
-  become: true
-
 - name: Detect GPU
-  # ansible.builtin.shell: set -o pipefail && lspci -v | grep -A1 -e VGA -e 3D  # noqa command-instead-of-shell
   ansible.builtin.shell: set -o pipefail && lspci | grep -i 'VGA\|3D\|display'  # noqa command-instead-of-shell
   register: gpu_result
   changed_when: no
+  check_mode: no
 
 - name: Install GPU drivers (AMD)
   community.general.pacman:
@@ -36,7 +29,7 @@
       - rocm-opencl-sdk
     state: present
   become: true
-  when: ("'radeon' in gpu_result.stdout.lower()") or ("'amd/ati' in gpu_result.stdout.lower()")
+  when: ('radeon' in gpu_result.stdout.lower()) or ('amd/ati' in gpu_result.stdout.lower())
 
 - name: Install GPU drivers (Intel)
   community.general.pacman:
@@ -55,7 +48,6 @@
       - lib32-vulkan-intel
       # https://wiki.archlinux.org/title/GPGPU
       - intel-compute-runtime
-      - opencl-clover-mesa
     state: present
   become: true
   when: "'intel' in gpu_result.stdout.lower()"

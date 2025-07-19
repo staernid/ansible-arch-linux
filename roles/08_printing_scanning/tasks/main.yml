@@ -10,9 +10,22 @@
     state: present
     use: "{{ aur_helper }}"
 
+- name: Fix /etc/nsswitch.conf for network discovery of printers
+  ansible.builtin.replace:
+    path: /etc/nsswitch.conf
+    regexp: "^{{ 'hosts: mymachines resolve [!UNAVAIL=return] files myhostname dns' | regex_escape() }}$"
+    replace: 'hosts: mymachines mdns_minimal [NOTFOUND=return] resolve [!UNAVAIL=return] files myhostname dns'
+
 - name: Start systemd service - cups.socket
   ansible.builtin.systemd:
     name: cups.socket
+    state: started
+    enabled: yes
+  become: true
+
+- name: Start systemd service - avahi-daemon.socket
+  ansible.builtin.systemd:
+    name: avahi-daemon.socket
     state: started
     enabled: yes
   become: true
