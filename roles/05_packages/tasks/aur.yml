@@ -1,10 +1,43 @@
 ---
-- name: Installing AUR helper
-  kewlfft.aur.aur:
+- name: check if {{ aur_helper }} is installed
+  community.general.pacman:
     name: "{{ aur_helper }}"
+    state: present
+  check_mode: true
+  ignore_errors: true
+  register: aur_helper_installed
+
+- name: Install AUR helper (yay)
+  when: not aur_helper_installed
+  tags: yay
+  block:
+  - name: Install dependencies
+    become: true
+    community.general.pacman:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - base-devel
+      - git
+
+  - name: clone yay from github
+    become: true
+    git:
+      repo: https://aur.archlinux.org/yay.git
+      dest: /tmp/yay
+      version: master
+      update: true
+
+  - name: makepkg --noconfirm -si
+    command: makepkg --noconfirm -si
+    become: true
+    args:
+      chdir: /tmp/yay
+      creates: /usr/bin/yay
 
 - name: Install AUR packages
-  kewlfft.aur.aur:
+  community.general.pacman:
     name: "{{ aur_packages }}"
+    executable: "{{ aur_helper }}"
     state: present
-    use: "{{ aur_helper }}"
+  become: true

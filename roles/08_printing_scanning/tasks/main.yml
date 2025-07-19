@@ -5,10 +5,11 @@
   become: true
 
 - name: Install printing and scanning packages (AUR)
-  kewlfft.aur.aur:
+  community.general.pacman:
     name: "{{ printing_scanning_aur_packages }}"
+    executable: "{{ aur_helper }}"
     state: present
-    use: "{{ aur_helper }}"
+  become: true
 
 - name: Fix /etc/nsswitch.conf for network discovery of printers
   ansible.builtin.replace:
@@ -22,6 +23,17 @@
     state: started
     enabled: yes
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+
+
+- name: Disable systemd service - systemd-resolved.service
+  ansible.builtin.systemd:
+    name: systemd-resolved.service
+    state: stopped
+    enabled: no
+  become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+
 
 - name: Start systemd service - avahi-daemon.socket
   ansible.builtin.systemd:
@@ -29,6 +41,8 @@
     state: started
     enabled: yes
   become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+
 
 - name: Detect scanner
   ansible.builtin.shell: set -o pipefail && scanimage -L  # noqa command-instead-of-shell

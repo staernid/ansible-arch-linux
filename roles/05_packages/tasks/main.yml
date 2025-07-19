@@ -1,7 +1,37 @@
 ---
-- name: Install packages
+- name: Install general packages
   community.general.pacman:
-    name: "{{ packages }}"
+    name: "{{ general_packages }}"
+    state: present
+  become: true
+
+- name: Install development packages
+  community.general.pacman:
+    name: "{{ development_packages }}"
+    state: present
+  become: true
+
+- name: Install shell packages
+  community.general.pacman:
+    name: "{{ shell_packages }}"
+    state: present
+  become: true
+
+- name: Install archive packages
+  community.general.pacman:
+    name: "{{ archive_packages }}"
+    state: present
+  become: true
+
+- name: Install media packages
+  community.general.pacman:
+    name: "{{ media_packages }}"
+    state: present
+  become: true
+
+- name: Install gaming packages
+  community.general.pacman:
+    name: "{{ gaming_packages }}"
     state: present
   become: true
 
@@ -12,6 +42,7 @@
   become: true
   when:
     - sunshine | default(false) | bool
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Install font packages
   ansible.builtin.import_tasks: fonts.yml

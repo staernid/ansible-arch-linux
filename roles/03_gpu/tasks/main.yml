@@ -3,7 +3,7 @@
   ansible.builtin.shell: set -o pipefail && lspci | grep -i 'VGA\|3D\|display'  # noqa command-instead-of-shell
   register: gpu_result
   changed_when: no
-  check_mode: no
+  check_mode: false
 
 - name: Install GPU drivers (AMD)
   community.general.pacman:

@@ -5,7 +5,7 @@
 user:
   name: vitezfh
   full_name: vitezfh
-  primary_group: users
+  primary_group: vitezfh
   additional_groups: docker,wheel,audio,docker
   # /bin/bash or /bin/zsh
   shell: /bin/bash
@@ -74,7 +74,7 @@ disable_systemd_homed: true
 #
 # Packages
 #
-packages:
+general_packages:
   - cadaver #cli webdav client
   ### GUI
   - firefox
@@ -84,7 +84,6 @@ packages:
   - e2fsprogs
   - exfatprogs
   - ffmpeg
-  - flatpak
   - fwupd
   - gnupg
   - gparted
@@ -113,7 +112,6 @@ packages:
   - networkmanager
   - ntfs-3g
   - nvme-cli
-  - openresolv
   - openssh
   - openvpn
   ### Audio
@@ -167,7 +165,7 @@ media_packages:
   - yt-dlp
   - vlc
   - vlc-plugins-all
-  - mkv
+  - mpv
   - lame
 
 gaming_packages:
@@ -178,7 +176,7 @@ gaming_packages:
   - wine-gecko
 
 aur_packages:
-  - makemkv
+
 
 flatpaks:
   - com.github.tchx84.Flatseal

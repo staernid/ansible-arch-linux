@@ -1,5 +1,6 @@
 ---
 - name: Install Xorg
+  when: desktop
   community.general.pacman:
     name:
       - xorg-xwayland
