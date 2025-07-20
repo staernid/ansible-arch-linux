@@ -41,3 +41,13 @@
     executable: "{{ aur_helper }}"
     state: present
   become: true
+- name: Install selected packages
+  community.general.pacman:
+    name: >-
+      {{
+        (aur_packages.general) +
+        (aur_packages.printing_scanning if printing_scanning else [])
+      }}
+    executable: "{{ aur_helper }}"
+    state: present
+  become: true

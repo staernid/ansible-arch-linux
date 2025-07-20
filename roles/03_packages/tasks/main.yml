@@ -1,0 +1,42 @@
+---
+- name: Install selected packages
+  community.general.pacman:
+    name: >-
+      {{
+        (packages.general) +
+        (packages.shell) +
+        (packages.archiving) +
+        (packages.development if development else []) +
+        (packages.media if media else []) +
+        (packages.gaming if gaming else []) +
+        (packages.printing_scanning if gaming else []) +
+        (packages.fonts if desktop else []) +
+
+      }}
+    state: present
+  become: true
+
+- name: Install Sunshine
+  community.general.pacman:
+    name: "lizardbyte/sunshine"
+    state: present
+  become: true
+  when:
+    - sunshine | default(false) | bool
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Install font packages
+  ansible.builtin.import_tasks: fonts.yml
+
+- name: Install aur packages
+  ansible.builtin.import_tasks: aur.yml
+
+- name: Install flatpaks
+  ansible.builtin.import_tasks: flatpak.yml
+
+- name: Start systemd service - systemd-modules-load.service
+  ansible.builtin.systemd:
+    name: systemd-modules-load.service
+    state: started
+    enabled: yes
+  become: true

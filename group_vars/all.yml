@@ -8,7 +8,7 @@ user:
   primary_group: vitezfh
   additional_groups: docker,wheel,audio,docker
   # /bin/bash or /bin/zsh
-  shell: /bin/bash
+  shell: /bin/zsh
   # See country list by running `reflector --list-countries`
   country: "Germany"
 
@@ -29,15 +29,22 @@ git:
 
 # desktop environment to install
 # "kde" or "gnome"
-desktop: false
+# true to only install gpu drivers and fonts, etc.
+desktop: true
+
+# To install multimedia packages
+media: true
+
+# To install gaming packages
+gaming: true
 
 # only AMD or Intel CPUs are currently supported
 # true or false
-install_microcode: true
+microcode: true
 
 # whether to enable printing/scanning or not
 # true or false
-enable_printing: true
+printing_scanning: true
 
 # whether to detect the scanner or not
 # true or false
@@ -45,7 +52,7 @@ detect_scanner: true
 
 # whether to enable bluetooth or not
 # true or false
-enable_bluetooth: true
+bluetooth: true
 
 # whether to install sunshine (game streaming)
 # true or false
@@ -74,118 +81,113 @@ disable_systemd_homed: true
 #
 # Packages
 #
-general_packages:
-  - cadaver #cli webdav client
-  ### GUI
-  - firefox
-  - chromium
-  ###
-  - dosfstools
-  - e2fsprogs
-  - exfatprogs
-  - ffmpeg
-  - fwupd
-  - gnupg
-  - gparted
-  - gst-libav
-  - gst-plugins-bad
-  - gst-plugins-base
-  - gst-plugins-good
-  - gvfs
-  - gvfs-afc
-  - gvfs-gphoto2
-  - gvfs-smb
-  - htop
-  - ifuse
-  - inetutils
-  - iotop
-  - iperf3
-  - iputils
-  - kubectl
-  - libimobiledevice
-  - linux-firmware
-  - man
-  - man-db
-  - man-pages
-  - minicom
-  - mkvtoolnix-cli
-  - networkmanager
-  - ntfs-3g
-  - nvme-cli
-  - openssh
-  - openvpn
-  ### Audio
-  - pipewire
-  - pipewire-alsa
-  - alsa-firmware
-  - alsa-plugins
-  - alsa-utils
-  ###
-  - pkgstats
-  - usbutils
-  - vi
-  - wireguard-tools
-  - wireplumber
-  - wpa_supplicant
-  - avahi
-  # Needed for GTK apps that run as Flatpaks
-  - xdg-desktop-portal-gtk
-  - xfsprogs
-  - git
-
-development_packages:
-  - code
-  - neovim
-  - docker
-  - docker-compose
-  - picocom # serial console, UART
-
-shell_packages:
-  - sudo
-  - bash
-  - bash-completion
-  - stow
-  - jq
-  - screen
-  - wget
-  - curl
-  - rsync
-  - ncdu
-  - tree
-  - fzf
-
-archive_packages:
-  - 7zip
-  - unrar-free
-  - unzip
-  - zstd
-  - zip
-
-media_packages:
-  - yt-dlp
-  - vlc
-  - vlc-plugins-all
-  - mpv
-  - lame
-
-gaming_packages:
-  - steam
-  - lutris
-  - wine
-  - wine-mono
-  - wine-gecko
-
-aur_packages:
-
-
-flatpaks:
-  - com.github.tchx84.Flatseal
-  - io.github.flattool.Warehouse
-  - us.zoom.Zoom
-  # See other themes here
-  # flatpak remote-ls flathub | grep org.gtk.Gtk3theme
-
-base_fonts:
+packages:
+  general:
+    - cadaver #cli webdav client
+    ### GUI
+    - firefox
+    - chromium
+    ###
+    - dosfstools
+    - e2fsprogs
+    - exfatprogs
+    - ffmpeg
+    - fwupd
+    - gnupg
+    - gparted
+    - gst-libav
+    - gst-plugins-bad
+    - gst-plugins-base
+    - gst-plugins-good
+    - gvfs
+    - gvfs-afc
+    - gvfs-gphoto2
+    - gvfs-smb
+    - htop
+    - ifuse
+    - inetutils
+    - iotop
+    - iperf3
+    - iputils
+    - kubectl
+    - libimobiledevice
+    - linux-firmware
+    - man
+    - man-db
+    - man-pages
+    - minicom
+    - mkvtoolnix-cli
+    - networkmanager
+    - ntfs-3g
+    - nvme-cli
+    - openssh
+    - openvpn
+    ### Audio
+    - pipewire
+    - pipewire-alsa
+    - alsa-firmware
+    - alsa-plugins
+    - alsa-utils
+    ###
+    - pkgstats
+    - usbutils
+    - vi
+    - wireguard-tools
+    - wireplumber
+    - wpa_supplicant
+    - avahi
+    # Needed for GTK apps that run as Flatpaks
+    - xdg-desktop-portal-gtk
+    - xfsprogs
+    - git
+  shell:
+    - sudo
+    - bash
+    - bash-completion
+    - stow
+    - jq
+    - screen
+    - wget
+    - curl
+    - rsync
+    - ncdu
+    - tree
+    - fzf
+  archiving:
+    - 7zip
+    - unrar-free
+    - unzip
+    - zstd
+    - zip
+  development:
+    - code
+    - neovim
+    - docker
+    - docker-compose
+    - picocom # serial console, UART
+    - esphome
+  media:
+    - yt-dlp
+    - vlc
+    - vlc-plugins-all
+    - mpv
+    - lame
+  gaming:
+    - steam
+    - lutris
+    - wine
+    - wine-mono
+    - wine-gecko
+  printing_scanning:
+    - cups
+    - cups-pdf
+    - cups-filters
+    - nss-mdns
+    - sane
+    - sane-airscan
+    - simple-scan
+    - avahi
+  fonts:
   - adobe-source-code-pro-fonts
   - adobe-source-han-sans-jp-fonts
   - adobe-source-sans-pro-fonts
@@ -202,6 +204,17 @@ base_fonts:
   - ttf-hack
   - ttf-liberation
 
+aur_packages:
+  general:
+  printing_scanning:
+
+flatpaks:
+  - com.github.tchx84.Flatseal
+  - io.github.flattool.Warehouse
+  - us.zoom.Zoom
+  # See other themes here
+  # flatpak remote-ls flathub | grep org.gtk.Gtk3theme
+
 vscode_extension_list:
   - eamodio.gitlens
   - golang.go
@@ -209,15 +222,3 @@ vscode_extension_list:
   - redhat.ansible
   - redhat.vscode-xml
   - redhat.vscode-yaml
-
-printing_scanning_packages:
-  - cups
-  - cups-pdf
-  - cups-filters
-  - nss-mdns
-  - sane
-  - sane-airscan
-  - simple-scan
-  - avahi
-
-printing_scanning_aur_packages:

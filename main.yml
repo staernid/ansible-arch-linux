@@ -4,11 +4,10 @@
   roles:
     - { role: 01_host_info }
     - { role: 02_basics }
-    - { role: 03_gpu }
-    - { role: 04_desktop, when: desktop }
-    - { role: 05_packages }
-    - { role: 06_microcode, when: install_microcode }
-    - { role: 07_users }
-    - { role: 08_printing_scanning, when: enable_printing }
-    - { role: 09_bluetooth, when: enable_bluetooth }
-    - { role: 10_power }
+    - { role: 03_packages }
+    - { role: 04_gpu, when: desktop }
+    - { role: 05_desktop, when: desktop }
+    - { role: 06_users }
+    - { role: 07_printing_scanning, when: printing_scanning }
+    - { role: 08_bluetooth, when: bluetooth }
+    - { role: 09_power }

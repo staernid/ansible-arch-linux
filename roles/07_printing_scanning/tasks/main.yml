@@ -1,16 +1,4 @@
 ---
-- name: Install printing and scanning packages
-  community.general.pacman:
-    name: "{{ printing_scanning_packages }}"
-  become: true
-
-- name: Install printing and scanning packages (AUR)
-  community.general.pacman:
-    name: "{{ printing_scanning_aur_packages }}"
-    executable: "{{ aur_helper }}"
-    state: present
-  become: true
-
 - name: Fix /etc/nsswitch.conf for network discovery of printers
   ansible.builtin.replace:
     path: /etc/nsswitch.conf
