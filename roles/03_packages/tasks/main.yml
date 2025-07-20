@@ -10,8 +10,7 @@
         (packages.media if media else []) +
         (packages.gaming if gaming else []) +
         (packages.printing_scanning if gaming else []) +
-        (packages.fonts if desktop else []) +
-
+        (packages.fonts if desktop else [])
       }}
     state: present
   become: true
