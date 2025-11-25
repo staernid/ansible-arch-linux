@@ -3,14 +3,14 @@
   community.general.pacman:
     name: >-
       {{
-        (packages.general) +
-        (packages.shell) +
-        (packages.archiving) +
-        (packages.development if development else []) +
-        (packages.media if media else []) +
-        (packages.gaming if gaming else []) +
-        (packages.printing_scanning if gaming else []) +
-        (packages.fonts if desktop else [])
+        (packages.get('general', [])) +
+        (packages.get('shell', [])) +
+        (packages.get('archiving', [])) +
+        (packages.get('development', []) if development else []) +
+        (packages.get('media', []) if media else []) +
+        (packages.get('gaming', []) if gaming else []) +
+        (packages.get('printing_scanning', []) if printing_scanning else []) +
+        (packages.get('fonts', []) if desktop else [])
       }}
     state: present
   become: true
@@ -23,9 +23,6 @@
   when:
     - sunshine | default(false) | bool
   ignore_errors: "{{ ansible_check_mode }}"
-
-- name: Install font packages
-  ansible.builtin.import_tasks: fonts.yml
 
 - name: Install aur packages
   ansible.builtin.import_tasks: aur.yml

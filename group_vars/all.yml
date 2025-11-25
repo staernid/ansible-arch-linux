@@ -32,6 +32,9 @@ git:
 # true to only install gpu drivers and fonts, etc.
 desktop: true
 
+# To install development packages
+development: true
+
 # To install multimedia packages
 media: true
 
@@ -115,6 +118,7 @@ packages:
     - man
     - man-db
     - man-pages
+    - pacutils
     - minicom
     - mkvtoolnix-cli
     - networkmanager
@@ -205,8 +209,9 @@ packages:
   - ttf-liberation
 
 aur_packages:
-  general:
-  printing_scanning:
+  general: 
+    - zsh-fast-syntax-highlighting
+  printing_scanning: []
 
 flatpaks:
   - com.github.tchx84.Flatseal

@@ -5,48 +5,45 @@
     ('yay-bin' not in ansible_facts.packages)
   tags: yay
   block:
-  - name: Install dependencies
-    become: true
-    community.general.pacman:
-      name: "{{ item }}"
-      state: present
-    with_items:
-      - base-devel
-      - git
+    - name: Install dependencies
+      become: true
+      community.general.pacman:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - base-devel
+        - git
 
-  - name: Clone AUR helper (yay) from github
-    become: false
-    ansible.builtin.git:
-      repo: https://aur.archlinux.org/yay.git
-      dest: /tmp/yay
-      version: master
-      update: true
-      depth: 1
+    - name: Clone AUR helper (yay) from github
+      become: false
+      ansible.builtin.git:
+        repo: https://aur.archlinux.org/yay.git
+        dest: /tmp/yay
+        version: master
+        update: true
+        depth: 1
 
-  - name: Build AUR helper (yay)
-    ansible.builtin.command: makepkg --noconfirm -sf
-    become: false
-    args:
-      chdir: /tmp/yay
-      #creates: /usr/bin/yay
+    - name: Build AUR helper (yay)
+      ansible.builtin.command: makepkg --noconfirm -sf
+      become: false
+      args:
+        chdir: /tmp/yay
+      register: my_output
+      when: not ansible_check_mode
 
-  - name: Install the built package
-    ansible.builtin.shell: |
-      pacman -U --noconfirm $(ls /tmp/yay/yay-*.pkg.tar.zst | grep -v -- -debug)
-    become: true
+    - name: Install the built package
+      ansible.builtin.shell: |
+        set -o pipefail
+        pacman -U --noconfirm $(ls /tmp/yay/yay-*.pkg.tar.zst | grep -v -- -debug)
+      become: true
+      when: not ansible_check_mode
 
-- name: Install AUR packages
-  community.general.pacman:
-    name: "{{ aur_packages }}"
-    executable: "{{ aur_helper }}"
-    state: present
-  become: true
 - name: Install selected packages
   community.general.pacman:
     name: >-
       {{
-        (aur_packages.general) +
-        (aur_packages.printing_scanning if printing_scanning else [])
+        (aur_packages.get('general', [])) +
+        (aur_packages.get('printing_scanning', []) if printing_scanning else [])
       }}
     executable: "{{ aur_helper }}"
     state: present
