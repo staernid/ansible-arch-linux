@@ -14,29 +14,42 @@
         - base-devel
         - git
 
-    - name: Clone AUR helper (yay) from github
+    - name: Create temporary directory for yay
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: _yay
+      register: yay_tmp_dir
       become: false
+
+    - name: Clone yay into temp dir
       ansible.builtin.git:
-        repo: https://aur.archlinux.org/yay.git
-        dest: /tmp/yay
+        repo: https://aur.archlinux.org/yay-git.git
+        dest: "{{ yay_tmp_dir.path }}"
         version: master
-        update: true
         depth: 1
+      become: false
 
     - name: Build AUR helper (yay)
       ansible.builtin.command: makepkg --noconfirm -sf
       become: false
       args:
-        chdir: /tmp/yay
+        chdir: "{{ yay_tmp_dir.path }}"
       register: my_output
       when: not ansible_check_mode
 
     - name: Install the built package
       ansible.builtin.shell: |
         set -o pipefail
-        pacman -U --noconfirm $(ls /tmp/yay/yay-*.pkg.tar.zst | grep -v -- -debug)
+        pacman -U --noconfirm $(ls {{ yay_tmp_dir.path }}/yay-*.pkg.tar.zst | grep -v -- -debug)
       become: true
       when: not ansible_check_mode
+
+- name: Upgrade system (AUR)
+  community.general.pacman:
+    executable: "{{ aur_helper }}"
+    upgrade: yes
+  become: true
+  become_user: "{{ user.name }}"
 
 - name: Install selected packages
   community.general.pacman:
@@ -48,3 +61,5 @@
     executable: "{{ aur_helper }}"
     state: present
   become: true
+  become_user: "{{ user.name }}"
+

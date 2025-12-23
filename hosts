@@ -1,3 +1,7 @@
-[all]
-127.0.0.1  ansible_connection=local
+[mars]
+# 127.0.0.1  ansible_connection=local
+hex
 x2sixty
+
+[venus]
+io
