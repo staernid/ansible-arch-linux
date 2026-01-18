@@ -157,6 +157,9 @@ packages:
     - ncdu
     - tree
     - fzf
+    - btop
+    - nvtop
+    - htop
   archiving:
     - 7zip
     - unrar-free
@@ -211,14 +214,21 @@ packages:
 aur_packages:
   general: 
     - zsh-fast-syntax-highlighting
+    - teams-for-linux-bin
+    - game-devices-udev
+    - lsfg-vk-git
+    - unarc-git
+    - theclicker
+    - ludusavi-bin
+    - lutris-wine-meta
+    - headsetkontrol
+    - antigravity
   printing_scanning: []
 
 flatpaks:
   - com.github.tchx84.Flatseal
   - io.github.flattool.Warehouse
   - us.zoom.Zoom
-  # See other themes here
-  # flatpak remote-ls flathub | grep org.gtk.Gtk3theme
 
 vscode_extension_list:
   - eamodio.gitlens

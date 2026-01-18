@@ -2,7 +2,8 @@
 - name: Install AUR helper (yay)
   when: >
     ('yay' not in ansible_facts.packages) and
-    ('yay-bin' not in ansible_facts.packages)
+    ('yay-bin' not in ansible_facts.packages) and
+    ('yay-git' not in ansible_facts.packages)
   tags: yay
   block:
     - name: Install dependencies
