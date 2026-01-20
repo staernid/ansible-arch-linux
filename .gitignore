@@ -4,3 +4,4 @@
 env/
 venv/
 hosts
+group_vars/venus.yml

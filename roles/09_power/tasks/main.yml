@@ -3,6 +3,7 @@
   community.general.pacman:
     name:
       - power-profiles-daemon
+      - hdparm
     state: present
   become: true
 
@@ -11,4 +12,13 @@
     name: power-profiles-daemon.service
     state: started
     enabled: yes
+  become: true
+
+- name: Create udev rule for hdparm
+  ansible.builtin.template:
+    src: 69-hdparm.rules.j2
+    dest: /etc/udev/rules.d/69-hdparm.rules
+    owner: root
+    group: root
+    mode: '0644'
   become: true
