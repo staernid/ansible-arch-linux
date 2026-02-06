@@ -71,7 +71,7 @@
 - name: Mask systemd services - lvm
   ansible.builtin.systemd:
     name: "{{ item }}"
-    masked: yes
+    masked: no
   become: true
   with_items:
     - lvm2-lvmetad.service
@@ -82,7 +82,7 @@
 - name: Mask systemd services - systemd homed
   ansible.builtin.systemd:
     name: "{{ item }}"
-    masked: yes
+    masked: no
   become: true
   with_items:
     - systemd-homed.service

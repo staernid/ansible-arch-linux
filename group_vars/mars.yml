@@ -84,7 +84,7 @@ disable_systemd_homed: true
 #
 # Packages
 #
-packages:
+official_packages:
   general:
     - cadaver #cli webdav client
     ### GUI
@@ -112,7 +112,6 @@ packages:
     - iotop
     - iperf3
     - iputils
-    - kubectl
     - libimobiledevice
     - linux-firmware
     - man
@@ -173,6 +172,7 @@ packages:
     - docker-compose
     - picocom # serial console, UART
     - esphome
+    - kubectl
   media:
     - yt-dlp
     - vlc

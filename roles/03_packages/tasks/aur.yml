@@ -14,6 +14,7 @@
       with_items:
         - base-devel
         - git
+        - go
 
     - name: Create temporary directory for yay
       ansible.builtin.tempfile:
@@ -45,22 +46,52 @@
       become: true
       when: not ansible_check_mode
 
-- name: Upgrade system (AUR)
-  community.general.pacman:
-    executable: "{{ aur_helper }}"
-    upgrade: yes
-  become: true
-  become_user: "{{ user.name }}"
+- name: Create the `aur_builder` user
+  become: yes
+  ansible.builtin.user:
+    name: aur_builder
+    create_home: yes
+    group: wheel
 
-- name: Install selected packages
-  community.general.pacman:
-    name: >-
+- name: Allow the `aur_builder` user to run `sudo pacman` without a password
+  become: yes
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    mode: 0644
+    validate: 'visudo -cf %s'
+
+- name: Create flat list of packages
+  ansible.builtin.set_fact:
+    packages_to_install: >-
+      {% for pkg in packages %}
+        {{ pkg | quote }}
+      {% endfor %}
+  vars:
+    packages: >-
       {{
+        (official_packages.get('general', [])) +
+        (official_packages.get('shell', [])) +
+        (official_packages.get('archiving', [])) +
+        (official_packages.get('development', []) if development else []) +
+        (official_packages.get('media', []) if media else []) +
+        (official_packages.get('gaming', []) if gaming else []) +
+        (official_packages.get('printing_scanning', []) if printing_scanning else []) +
+        (official_packages.get('fonts', []) if desktop else []) +
         (aur_packages.get('general', [])) +
-        (aur_packages.get('printing_scanning', []) if printing_scanning else [])
+        (aur_packages.get('printing_scanning', []) if printing_scanning else []) +
+        (['lizardbyte/sunshine'] if sunshine | default(false) | bool else [])
       }}
-    executable: "{{ aur_helper }}"
-    state: present
+
+- name: Install batch of packages
   become: true
-  become_user: "{{ user.name }}"
+  become_user: aur_builder
+  retries: 5
+  delay: 5
+  ansible.builtin.command: >
+    yay -S
+      --answerclean none --answeredit none --answerupgrade none --answerdiff none
+      --removemake --noconfirm --combinedupgrade --needed
+      {{ packages_to_install }}
 

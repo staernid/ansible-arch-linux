@@ -19,20 +19,25 @@ Ansible playbook to setup my Arch Linux machines (i.e., meant to be run against 
    ```
 1. Install Ansible
    ```
-   uv venv
-   source .venv/bin/activate
-   uv pip install -r requirements.txt
+   uv sync
    ```
 1. Install the Ansible requirements
    ```
-   ansible-galaxy install -r requirements.yml
+   uv run ansible-galaxy install -r requirements.yml
    ```
 1. (Optional) Edit the variables in `group_vars`
 1. (Optional) Run the playbook in check mode to view potential changes
    ```
-   ansible-playbook main.yml --ask-become-pass --check
-   ````
+   uv run ansible-playbook main.yml --ask-become-pass --check
+   ```
 1. Run the playbook (enter your user's password when prompted)
    ```
-   ansible-playbook main.yml --ask-become-pass
+   uv run ansible-playbook main.yml --ask-become-pass
    ```
+
+## Update
+
+To update **everything** (Python packages + Ansible roles) to the latest versions:
+```bash
+uv lock --upgrade && uv run ansible-galaxy install -r requirements.yml --force
+```

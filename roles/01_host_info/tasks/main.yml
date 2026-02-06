@@ -9,5 +9,9 @@
   ansible.builtin.set_fact:
     is_endeavouros: "{{ ansible_facts['lsb']['id'] == 'EndeavourOS' }}"
 
+- name: Set flag for cachyOS
+  ansible.builtin.set_fact:
+    is_cachyos: "{{ ansible_facts['lsb']['id'] == 'cachyos' }}"
+
 - name: Get details about installed packages
   ansible.builtin.package_facts:

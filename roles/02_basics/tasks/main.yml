@@ -24,26 +24,19 @@
     mode: 0644
   become: true
 
-- name: Update pacman configuration file
-  ansible.builtin.template:
-    src: pacman.conf.j2
-    dest: /etc/pacman.conf
-    backup: no
-    owner: root
-    group: root
-    mode: 0644
-  become: true
+- name: Update pacman configuration file on non-cachyos
+  when: not is_cachyos
+  block:
+    - name: Update pacman configuration file
+      ansible.builtin.template:
+        src: pacman.conf.j2
+        dest: /etc/pacman.conf
+        backup: no
+        owner: root
+        group: root
+        mode: 0644
+      become: true
 
-- name: Add cache mirrolist configuration file
-  ansible.builtin.template:
-    src: cachelist.j2
-    dest: /etc/pacman.d/cachelist
-    backup: no
-    owner: root
-    group: root
-    mode: 0644
-
-  become: true
 - name: Add mirrolist configuration file
   ansible.builtin.template:
     src: mirrorlist.j2
@@ -78,7 +71,7 @@
     enabled: yes
     scope: user
 
-
+# TODO: When not cachyos
 - name: Start systemd service - systemd-boot-update.service
   ansible.builtin.systemd:
     name: systemd-boot-update.service

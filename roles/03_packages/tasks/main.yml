@@ -1,31 +1,7 @@
 ---
-- name: Install selected packages
-  community.general.pacman:
-    name: >-
-      {{
-        (packages.get('general', [])) +
-        (packages.get('shell', [])) +
-        (packages.get('archiving', [])) +
-        (packages.get('development', []) if development else []) +
-        (packages.get('media', []) if media else []) +
-        (packages.get('gaming', []) if gaming else []) +
-        (packages.get('printing_scanning', []) if printing_scanning else []) +
-        (packages.get('fonts', []) if desktop else [])
-      }}
-    state: present
-  become: true
-
-- name: Install Sunshine
-  community.general.pacman:
-    name: "lizardbyte/sunshine"
-    state: present
-  become: true
-  when:
-    - sunshine | default(false) | bool
-  ignore_errors: "{{ ansible_check_mode }}"
-
-- name: Install aur packages
+- name: Install aur and official packages
   ansible.builtin.import_tasks: aur.yml
+
 
 - name: Install flatpaks
   ansible.builtin.import_tasks: flatpak.yml
