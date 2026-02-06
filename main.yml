@@ -2,6 +2,7 @@
 - name: Main play
   hosts: mars
   roles:
+    - { role: 00_secrets }
     - { role: 01_host_info }
     - { role: 02_basics }
     - { role: 03_packages }

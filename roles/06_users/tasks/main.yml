@@ -44,20 +44,31 @@
   with_items: "{{ vscode_extension_list }}"
   changed_when: no
 
-# TODO: this
-# - name: Get dotfiles
-#   ansible.builtin.get_url:
-#     url: '{{ item.src }}'
-#     dest: '{{ item.dest }}'
-#     mode: 0644
-#     owner: "{{ user.name }}"
-#     group: "{{ user.primary_group }}"
-#   with_items:
-#     - { src: 'https://raw.githubusercontent.com/TODO/dotfiles/main/.aliases', dest: '/home/TODO/.aliases' }
-#     - { src: 'https://raw.githubusercontent.com/TODO/dotfiles/main/.vimrc', dest: '/home/TODO/.vimrc' }
-#     - { src: 'https://raw.githubusercontent.com/TODO/dotfiles/main/.bashrc', dest: '/home/TODO/.bashrc' }
-#     - { src: 'https://raw.githubusercontent.com/TODO/dotfiles/main/.zshrc', dest: '/home/TODO/.zshrc' }
-#     - { src: 'https://raw.githubusercontent.com/TODO/dotfiles/main/.p10k.zsh', dest: '/home/TODO/.p10k.zsh' }
+- name: Clone dotfiles
+  ansible.builtin.git:
+    repo: https://github.com/staernid/dotfiles.git
+    dest: "/home/{{ user.name }}/dotfiles"
+    version: master
+  become: true
+  become_user: "{{ user.name }}"
+
+- name: Copy dotfile config
+  ansible.builtin.copy:
+    src: "/home/{{ user.name }}/dotfiles/dotfile.conf.dist"
+    dest: "/home/{{ user.name }}/dotfiles/dotfile.conf"
+    remote_src: yes
+    force: false
+  become: true
+  become_user: "{{ user.name }}"
+
+- name: Deploy dotfiles
+  ansible.builtin.command:
+    cmd: ./deploy.sh
+    chdir: "/home/{{ user.name }}/dotfiles"
+  become: true
+  become_user: "{{ user.name }}"
+  loop: [1, 2]
+  changed_when: true
 
 - name: Update makepkg configuration file
   ansible.builtin.template:
@@ -67,25 +78,3 @@
     owner: "{{ user.name }}"
     group: "{{ user.primary_group }}"
     mode: 0644
-
-- name: Mask systemd services - lvm
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    masked: no
-  become: true
-  with_items:
-    - lvm2-lvmetad.service
-    - lvm2-lvmetad.socket
-    - lvm2-monitor.service
-  when: disable_lvm
-
-- name: Mask systemd services - systemd homed
-  ansible.builtin.systemd:
-    name: "{{ item }}"
-    masked: no
-  become: true
-  with_items:
-    - systemd-homed.service
-    - systemd-userdbd.service
-    - systemd-userdbd.socket
-  when: disable_systemd_homed

@@ -1,0 +1,9 @@
+---
+# Prefix for Bitwarden items containing SSH keys
+ssh_key_prefix: "sshkey_"
+
+# Field where the private key is stored (usually 'Private Key' for SSH type)
+ssh_key_field: "Private Key"
+
+# Destination directory for the SSH keys
+ssh_key_dir: "/home/{{ user.name }}/.ssh"

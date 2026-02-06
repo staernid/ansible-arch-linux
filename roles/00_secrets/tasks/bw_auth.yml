@@ -1,0 +1,61 @@
+---
+- name: Ensure Bitwarden CLI is installed
+  ansible.builtin.command: bw --version
+  register: bw_version_check
+  delegate_to: localhost
+  run_once: true
+  changed_when: false
+  failed_when: bw_version_check.rc != 0
+
+- name: Check Bitwarden status
+  ansible.builtin.command: bw status
+  register: bw_status_cmd
+  delegate_to: localhost
+  changed_when: false
+  run_once: true
+  no_log: true
+
+- name: Authentication block
+  block:
+    - name: Use existing BW_SESSION if available
+      ansible.builtin.set_fact:
+        bw_session_shared: "{{ lookup('env', 'BW_SESSION') }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Unlock Bitwarden if session is missing or locked
+      block:
+        - name: Prompt for Bitwarden master password
+          ansible.builtin.pause:
+            prompt: "Bitwarden is locked or BW_SESSION is missing. Enter Master Password"
+            echo: no
+          register: bw_password_prompt
+          run_once: true
+          no_log: true
+
+        - name: Unlock Bitwarden and get session
+          ansible.builtin.shell: bw unlock "{{ bw_password_prompt.user_input }}" --raw
+          register: bw_session_raw
+          delegate_to: localhost
+          run_once: true
+          changed_when: false
+          no_log: true
+
+        - name: Update shared session fact
+          ansible.builtin.set_fact:
+            bw_session_shared: "{{ bw_session_raw.stdout }}"
+          delegate_to: localhost
+          run_once: true
+      when: bw_session_shared == "" or (bw_status_cmd.stdout | from_json).status == 'locked'
+
+    - name: Distribute session fact to all hosts
+      ansible.builtin.set_fact:
+        bw_session: "{{ hostvars['localhost']['bw_session_shared'] }}"
+  run_once: true
+  # Note: we use run_once but the set_fact at the end will apply to all hosts in the play if we are careful.
+  # Actually, run_once + set_fact only sets it for one host.
+  # To set it for ALL, we should remove run_once from the final set_fact.
+
+- name: Finalize BW_SESSION fact for each host
+  ansible.builtin.set_fact:
+    bw_session: "{{ hostvars['localhost']['bw_session_shared'] }}"

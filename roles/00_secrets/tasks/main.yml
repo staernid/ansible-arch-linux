@@ -1,0 +1,6 @@
+---
+- name: Bitwarden Authentication
+  ansible.builtin.include_tasks: bw_auth.yml
+
+- name: Process SSH Keys
+  ansible.builtin.include_tasks: fetch_keys.yml

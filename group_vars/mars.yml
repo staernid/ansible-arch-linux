@@ -70,18 +70,6 @@ pacman:
 aur_helper: yay
 
 #
-# Services
-#
-
-# if not using LVM, disable it
-# true or false
-disable_lvm: true
-
-# if not using systemd homed, disable it
-# true or false
-disable_systemd_homed: true
-
-#
 # Packages
 #
 official_packages:
