@@ -1,0 +1,39 @@
+---
+- name: Configure Arch Linux Workstations
+  hosts: mars
+  become: true
+
+  roles:
+    #- role: secrets
+    #  tags: ["secrets", "security"]
+
+    - role: host_info
+      tags: ["info", "facts"]
+
+    - role: base
+      tags: ["base", "common"]
+
+    - role: packages
+      tags: ["packages", "software"]
+
+    - role: gpu
+      when: desktop | default(false)
+      tags: ["gpu", "hardware"]
+
+    - role: desktop
+      when: desktop | default(false)
+      tags: ["desktop", "gui"]
+
+    - role: users
+      tags: ["users", "accounts"]
+
+    - role: printing_scanning
+      when: printing_scanning | default(false)
+      tags: ["printing", "scanning"]
+
+    - role: bluetooth
+      when: bluetooth | default(false)
+      tags: ["bluetooth", "hardware"]
+
+    - role: power
+      tags: ["power", "system"]

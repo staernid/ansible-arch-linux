@@ -21,7 +21,7 @@
     backup: no
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   become: true
 
 - name: Update pacman configuration file on non-cachyos
@@ -34,7 +34,7 @@
         backup: no
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
       become: true
 
 - name: Add mirrolist configuration file
@@ -44,7 +44,7 @@
     backup: no
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   become: true
   
 - name: Install basic packages
@@ -63,13 +63,6 @@
     state: started
     enabled: yes
   become: true
-
-- name: Start systemd service - xdg-user-dirs.service
-  ansible.builtin.systemd:
-    name: xdg-user-dirs.service
-    state: started
-    enabled: yes
-    scope: user
 
 # TODO: When not cachyos
 - name: Start systemd service - systemd-boot-update.service

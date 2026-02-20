@@ -1,0 +1,187 @@
+---
+#
+# Default configuration for all persons/devices
+#
+
+# How many parallel downloads to run at once
+pacman:
+  parallel_downloads: 10
+
+# Set aur helper
+aur_helper: yay
+
+# Default package lists
+default_official_packages:
+  general:
+    - cadaver #cli webdav client
+    - firefox
+    - chromium
+    - dosfstools
+    - e2fsprogs
+    - exfatprogs
+    - ffmpeg
+    - fwupd
+    - gnupg
+    - gparted
+    - gst-libav
+    - gst-plugins-bad
+    - gst-plugins-base
+    - gst-plugins-good
+    - gvfs
+    - gvfs-afc
+    - gvfs-gphoto2
+    - gvfs-smb
+    - htop
+    - ifuse
+    - inetutils
+    - iotop
+    - iperf3
+    - iputils
+    - libimobiledevice
+    - linux-firmware
+    - man
+    - man-db
+    - man-pages
+    - pacutils
+    - minicom
+    - mkvtoolnix-cli
+    - networkmanager
+    - ntfs-3g
+    - nvme-cli
+    - openssh
+    - openvpn
+    - pipewire
+    - pipewire-alsa
+    - alsa-firmware
+    - alsa-plugins
+    - alsa-utils
+    - pkgstats
+    - usbutils
+    - vi
+    - wireguard-tools
+    - wireplumber
+    - wpa_supplicant
+    - avahi
+    - xdg-desktop-portal-gtk
+    - xfsprogs
+    - git
+  shell:
+    - sudo
+    - bash
+    - bash-completion
+    - stow
+    - jq
+    - screen
+    - wget
+    - curl
+    - rsync
+    - ncdu
+    - tree
+    - fzf
+    - btop
+    - nvtop
+  archiving:
+    - 7zip
+    - unrar-free
+    - unzip
+    - zstd
+    - zip
+  development:
+    - code
+    - neovim
+    - docker
+    - docker-compose
+    - picocom # serial console, UART
+    - esphome
+    - kubectl
+  media:
+    - yt-dlp
+    - vlc
+    - vlc-plugins-all
+    - mpv
+    - lame
+  gaming:
+    - steam
+    - lutris
+    - wine
+    - wine-mono
+    - wine-gecko
+  printing_scanning:
+    - cups
+    - cups-pdf
+    - cups-filters
+    - nss-mdns
+    - sane
+    - sane-airscan
+    - simple-scan
+    - avahi
+  fonts:
+    - adobe-source-code-pro-fonts
+    - adobe-source-han-sans-jp-fonts
+    - adobe-source-sans-pro-fonts
+    - adobe-source-serif-pro-fonts
+    - gnu-free-fonts
+    - noto-fonts
+    - noto-fonts-cjk
+    - noto-fonts-emoji
+    - powerline-fonts
+    - ttf-anonymous-pro
+    - ttf-dejavu
+    - otf-cascadia-code
+    - ttf-cascadia-code
+    - ttf-hack
+    - ttf-liberation
+
+default_aur_packages:
+  general:
+    - zsh-fast-syntax-highlighting
+    - teams-for-linux-bin
+    - game-devices-udev
+    - lsfg-vk-git
+    - unarc-git
+    - theclicker
+    - ludusavi-bin
+    - lutris-wine-meta
+    - headsetkontrol
+    - antigravity
+  printing_scanning: []
+
+default_flatpaks:
+  - com.github.tchx84.Flatseal
+  - io.github.flattool.Warehouse
+  - us.zoom.Zoom
+
+default_vscode_extension_list:
+  - eamodio.gitlens
+  - golang.go
+  - ms-python.python
+  - redhat.ansible
+  - redhat.vscode-xml
+  - redhat.vscode-yaml
+
+# Default flags
+desktop: true
+development: true
+media: true
+gaming: true
+microcode: true
+printing_scanning: true
+detect_scanner: true
+bluetooth: true
+sunshine: false
+
+# Service related defaults
+disable_lvm: true
+disable_systemd_homed: true
+
+# Person-specific overrides (empty by default)
+official_packages: {}
+aur_packages: {}
+flatpaks: []
+vscode_extension_list: []
+
+# Host-specific overrides (empty by default)
+host_official_packages: {}
+host_aur_packages: {}
+host_flatpaks: []
+host_vscode_extension_list: []

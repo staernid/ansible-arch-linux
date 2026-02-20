@@ -17,7 +17,7 @@
 
 - name: Install flatpaks
   community.general.flatpak:
-    name: "{{ flatpaks }}"
+    name: "{{ (default_flatpaks | default([])) + (flatpaks | default([])) + (host_flatpaks | default([])) }}"
     state: present
     remote: flathub
   become: true

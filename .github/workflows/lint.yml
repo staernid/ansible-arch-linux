@@ -1,51 +1,31 @@
 ---
-name: Lint
+name: Integration
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-  schedule:
-    - cron: "0 5 * * 0"
-  workflow_dispatch:
 
 jobs:
-  yamllint:
-    name: yamllint
-
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.11', '3.12']
-
     steps:
-      - name: Check out the codebase
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        
+      - name: Set up Python
+        run: uv python install 3.12
+        
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-          ansible-galaxy install -r requirements.yml
-
-      - name: Install yamllint
-        run: |
-          python3 --version
-          yamllint --version
-
-      - name: List files to yamllint
-        run: |
-          yamllint --list-files .
-
+        run: uv sync
+        
+      - name: Install Galaxy dependencies
+        run: uv run ansible-galaxy install -r requirements.yml
+        
       - name: Run yamllint
-        run: |
-          yamllint .
+        run: uv run yamllint .
+        
+      - name: Run ansible-lint
+        run: uv run ansible-lint

@@ -2,17 +2,16 @@
 
 ## Python Environment Setup
 
-*   **Create virtual environment**: `uv venv`
-*   **Activate virtual environment**: `source .venv/bin/activate`
-*   **Install dependencies**: `uv pip install -r requirements.txt`
-*   **Update dependencies**: `uv pip install --upgrade -r requirements.txt`
+*   **Sync environment**: `uv sync` (Handles all dependencies from `pyproject.toml`)
+*   **Update lockfile**: `uv lock --upgrade`
+*   **Run commands**: Use `uv run <command>` (e.g., `uv run ansible-playbook site.yml`)
 
 ## Build/Lint/Test Commands
 
-*   **Lint all playbooks**: `ansible-lint`
-*   **Lint a specific playbook**: `ansible-lint <path/to/playbook.yml>`
-*   **Run all tests**: (No explicit test command found, assume `ansible-playbook` for verification)
-*   **Run a single test**: `ansible-playbook <path/to/playbook.yml>` (for task verification)
+*   **Lint all playbooks**: `uv run ansible-lint`
+*   **Lint a specific file**: `uv run ansible-lint <path/to/file.yml>`
+*   **Run the main playbook**: `uv run ansible-playbook site.yml`
+*   **Run with tags**: `uv run ansible-playbook site.yml --tags <tag_name>`
 
 ## Code Style Guidelines
 
@@ -24,4 +23,5 @@
     *   Variable names: Follow `ansible-lint` recommendations.
 *   **Truthiness**: Use explicit "yes", "no", "true", "false" for boolean values.
 *   **Imports**: Use Fully Qualified Collection Names (FQCN) for built-in modules.
-*   **Error Handling**: Not explicitly defined, follow Ansible best practices for error handling (e.g., `ignore_errors`, `failed_when`).
+*   **Error Handling**: Favor `failed_when` and `changed_when` over `ignore_errors` to maintain idiomatic code. Use `no_log: true` for tasks involving secrets.
+*   **Inventory**: Use the YAML inventory at `inventory/hosts.yml`.

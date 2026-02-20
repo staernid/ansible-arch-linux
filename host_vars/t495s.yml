@@ -1,0 +1,21 @@
+---
+#
+# Specific configuration for the x270 device
+#
+
+# You can override general flags
+# bluetooth: false
+
+# Or add device-specific packages
+host_official_packages:
+  general:
+    - tp_smapi # ThinkPad specific
+    - acpi_call
+
+host_aur_packages:
+  general:
+    - thinkfan
+
+# Or add device-specific flatpaks
+# host_flatpaks:
+#   - some.device.App

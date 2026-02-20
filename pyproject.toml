@@ -1,11 +1,23 @@
 [project]
 name = "ansible-arch-linux"
 version = "0.1.0"
-description = "Add your description here"
+description = "Ansible playbooks for Arch Linux configuration"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "ansible",
-    "ansible-lint",
-    "jinja2",
+    "ansible>=9.0.0",
+    "jmespath>=1.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "ansible-lint>=24.0.0",
+    "molecule>=6.0.0",
+    "yamllint>=1.35.0",
+    "pre-commit>=3.6.0",
+    "pytest>=8.0.0",
+    "pytest-testinfra>=10.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["roles"]

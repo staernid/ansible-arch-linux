@@ -8,6 +8,7 @@
     shell: "{{ user.shell }}"
     state: present
   become: true
+  register: user_created
 
 - name: Git config user.name
   community.general.git_config:
@@ -41,7 +42,7 @@
 
 - name: Install VS Code extensions
   ansible.builtin.shell: code --install-extension {{ item }}  # noqa command-instead-of-shell
-  with_items: "{{ vscode_extension_list }}"
+  with_items: "{{ (default_vscode_extension_list | default([])) + (vscode_extension_list | default([])) + (host_vscode_extension_list | default([])) }}"
   changed_when: no
 
 - name: Clone dotfiles
@@ -58,6 +59,7 @@
     dest: "/home/{{ user.name }}/dotfiles/dotfile.conf"
     remote_src: yes
     force: false
+    mode: '0644'
   become: true
   become_user: "{{ user.name }}"
 
@@ -77,4 +79,21 @@
     backup: no
     owner: "{{ user.name }}"
     group: "{{ user.primary_group }}"
-    mode: 0644
+    mode: '0644'
+
+- name: Enable lingering for user
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ user.name }}"
+    creates: "/var/lib/systemd/linger/{{ user.name }}"
+  become: true
+
+- name: Start systemd service - xdg-user-dirs.service
+  ansible.builtin.systemd:
+    name: xdg-user-dirs.service
+    state: started
+    enabled: yes
+    scope: user
+  become: true
+  become_user: "{{ user.name }}"
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ user_created.uid }}"

@@ -28,11 +28,11 @@ Ansible playbook to setup my Arch Linux machines (i.e., meant to be run against 
 1. (Optional) Edit the variables in `group_vars`
 1. (Optional) Run the playbook in check mode to view potential changes
    ```
-   uv run ansible-playbook main.yml --ask-become-pass --check
+   uv run ansible-playbook site.yml --ask-become-pass --check
    ```
 1. Run the playbook (enter your user's password when prompted)
    ```
-   uv run ansible-playbook main.yml --ask-become-pass
+   uv run ansible-playbook site.yml --ask-become-pass
    ```
 
 ## Update
